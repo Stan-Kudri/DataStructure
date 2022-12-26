@@ -4,15 +4,19 @@ namespace DataStructure
 {
     public class ArrayList<T> : IEnumerable<T>
     {
-        public T[]? ListItem { get; set; } = null;
+        private const int DoubleMultiply = 2;
 
-        private int _capacity;
+        private T[] ListItem { get; set; } = Array.Empty<T>();
+
+        private int _capacity = 0;
+
+        private int _lenght = 0;
 
         public T this[int index]
         {
             get
             {
-                if (index >= 0 && index < ListItem.Length)
+                if (index >= 0 && index < _lenght)
                 {
                     return ListItem[index];
                 }
@@ -23,137 +27,141 @@ namespace DataStructure
             }
             set
             {
-                if (index >= 0 && index < ListItem.Length)
+                if (index >= 0 && index < _lenght)
                 {
                     ListItem[index] = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
-        public int Count => _capacity;
+        public int Count => _lenght;
 
-        public ArrayList() { }
+        public int Capacity => _capacity;
 
-        public ArrayList(T[]? array)
+        private void DoubleCapacityFromLenght() => _capacity = DoubleMultiply * _lenght;
+
+        private void DefoultValue()
         {
-            if (array != null)
+            _capacity = 10;
+            ListItem = new T[_capacity];
+        }
+
+        private void Resiz(T[] array)
+        {
+            DoubleCapacityFromLenght();
+            ListItem = new T[_capacity];
+            array.CopyTo(ListItem, 0);
+        }
+
+        public ArrayList()
+        {
+            DefoultValue();
+        }
+
+        public ArrayList(T[] array)
+        {
+            if (array == null)
             {
-                _capacity = array.Length;
-                if (_capacity != 0)
+                throw new ArgumentNullException(nameof(array));
+            }
+            if (array.Length > 0)
+            {
+                _lenght = array.Length;
+
+                if (_lenght >= _capacity)
                 {
-                    ListItem = new T[array.Length];
-                    array.CopyTo(ListItem, 0);
+                    DoubleCapacityFromLenght();
+                    ListItem = new T[_capacity];
                 }
+
+                array.CopyTo(ListItem, 0);
+            }
+            else
+            {
+                ListItem = Array.Empty<T>();
             }
         }
 
         public ArrayList(int capacity)
         {
-            if (_capacity <= 0)
+            if (capacity < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(capacity));
-
-            ListItem = new T[capacity];
-            _capacity = capacity;
+            }
+            if (capacity == 0)
+            {
+                _capacity = 0;
+                ListItem = Array.Empty<T>();
+            }
+            if (_capacity != capacity)
+            {
+                ListItem = new T[capacity];
+                _capacity = capacity;
+                _lenght = 0;
+            }
         }
 
         public void Add(T item)
         {
-            if (ListItem == null)
+            if (_capacity == 0)
             {
-                ListItem = new T[] { item };
-                _capacity = 1;
+                DefoultValue();
             }
 
-            else
-            {
-                var array = new T[_capacity];
-                ListItem.CopyTo(array, 0);
+            _lenght++;
 
-                _capacity++;
-                ListItem = new T[_capacity];
-                array.CopyTo(ListItem, 0);
-                ListItem[_capacity - 1] = item;
+            if (_lenght >= _capacity)
+            {
+                Resiz(ListItem);
             }
+
+            ListItem[_lenght - 1] = item;
         }
 
-        public bool Remove(T? item)
+        public bool Contain(T item) => _lenght != 0 && IndexOf(item) >= 0;
+
+        public int IndexOf(T item) => Array.IndexOf(ListItem, item, 0, _lenght);
+
+        public bool Remove(T item)
         {
-            if (ListItem == null)
-            {
-                throw new ArgumentException("Array null");
-            }
+            var index = IndexOf(item);
 
-            var hasItem = false;
-            var array = new T[_capacity];
-            for (var i = 0; i < _capacity; i++)
+            if (index >= 0)
             {
-                if (ListItem[i].Equals(item))
-                {
-                    _capacity--;
-                    hasItem = true;
-                }
-
-                array[i] = hasItem ? ListItem[i + 1] : ListItem[i];
-            }
-
-            if (hasItem)
-            {
-                ListItem = new T[_capacity];
-                Array.Copy(array, ListItem, _capacity);
-            }
-            return hasItem;
-        }
-
-        public void RemoveAt(int index)
-        {
-            if (ListItem == null)
-            {
-                throw new ArgumentException("Array null");
-            }
-
-            if (index < _capacity)
-            {
-                var indexItemList = 0;
-                var array = new T[_capacity - 1];
-                for (var i = 0; i < _capacity; i++)
-                {
-                    if (i != index)
-                    {
-                        array[indexItemList] = ListItem[i];
-                        indexItemList++;
-                    }
-                }
-                _capacity--;
-                ListItem = new T[_capacity];
-                array.CopyTo(ListItem, 0);
-            }
-            else
-                throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        public bool Contain(T item)
-        {
-            if (item == null)
-            {
-                throw new Exception("List null.");
-            }
-
-            foreach (var element in ListItem)
-            {
-                if (item.Equals(element))
-                    return true;
+                RemoveAt(index);
+                return true;
             }
 
             return false;
         }
 
-        public void Clear() => ListItem = new T[0];
+        public void RemoveAt(int index)
+        {
+            if (index < _lenght)
+            {
+                _lenght--;
+                Array.Copy(ListItem, index + 1, ListItem, index, _lenght - index);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+        }
+        public void Clear()
+        {
+            ListItem = new T[0];
+            _capacity = 0;
+            _lenght = 0;
+        }
 
         public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(ListItem);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
-
 
     public class ArrayEnumerator<T> : IEnumerator<T>
     {
@@ -166,7 +174,9 @@ namespace DataStructure
         public ArrayEnumerator(T[]? array)
         {
             if (array == null)
+            {
                 throw new ArgumentNullException(nameof(array), "Array not null.");
+            }
             _itemArray = array;
             _index = -1;
         }

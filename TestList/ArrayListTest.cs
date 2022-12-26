@@ -1,15 +1,15 @@
-using GenericsToList;
+using DataStructure;
 
 namespace TestList
 {
-    public class ListTest
+    public class ArrayListTest
     {
         [Theory]
         [InlineData("First Item", "Second Item")]
         public void Compare_Add_Item_Method_New_Collection_With_Collection_List(string firstItem, string secondItem)
         {
             //Arrange
-            var listClass = new ListClass<string>();
+            var listClass = new ArrayList<string>();
             var list = new List<string>();
 
             //Act
@@ -27,7 +27,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Remove_Item_Method_To_Collection(ListClass<string> list)
+        public void Remove_Item_Method_To_Collection(ArrayList<string> list)
         {
             //Arrange
             var item = "Sandy";
@@ -41,7 +41,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Not_Remove_Item_Method_To_Collection(ListClass<string> list)
+        public void Not_Remove_Item_Method_To_Collection(ArrayList<string> list)
         {
             //Arrange
             var item = "MOLOND";
@@ -55,7 +55,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ItemElement))]
-        public void Remove_Item_On_Index_To_Collection(ListClass<string> actualList, List<string> expectedList)
+        public void Remove_Item_On_Index_To_Collection(ArrayList<string> actualList, List<string> expectedList)
         {
             //Arrange
             var index = 2;
@@ -79,7 +79,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Remove_Item_On_Index_To_Collection_Exception(ListClass<string> list)
+        public void Remove_Item_On_Index_To_Collection_Exception(ArrayList<string> list)
         {
             //Arrange
             var index = 10;
@@ -90,7 +90,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Contain_Item_To_Collection(ListClass<string> list)
+        public void Contain_Item_To_Collection(ArrayList<string> list)
         {
             //Arrange
             var item = "Keny";
@@ -104,7 +104,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Not_Contain_Item_To_Collection(ListClass<string> list)
+        public void Not_Contain_Item_To_Collection(ArrayList<string> list)
         {
             //Arrange
             var item = "Post Malone";
@@ -118,7 +118,7 @@ namespace TestList
 
         [Theory]
         [MemberData(nameof(ListElement))]
-        public void Examination_Clear_Collection(ListClass<string> actualList)
+        public void Examination_Clear_Collection(ArrayList<string> actualList)
         {
             //Arrange
             var expectedList = new List<string>();
@@ -135,7 +135,7 @@ namespace TestList
         {
             yield return new object[]
             {
-                new ListClass<string>(){"Keny", "Manta", "Sandy", "Polly", "Dandy"},
+                new ArrayList<string>(){"Keny", "Manta", "Sandy", "Polly", "Dandy"},
             };
         }
 
@@ -143,7 +143,7 @@ namespace TestList
         {
             yield return new object[]
             {
-                new ListClass<string>(){"Keny", "Manta", "Sandy", "Polly", "Dandy"},
+                new ArrayList<string>(){"Keny", "Manta", "Sandy", "Polly", "Dandy"},
                 new List<string>(){ "Keny", "Manta", "Sandy", "Polly", "Dandy" },
             };
         }

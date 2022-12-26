@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GenericsToList\GenericsToList.csproj" />
+    <ProjectReference Include="..\DataStructure\DataStructure.csproj" />
   </ItemGroup>
 
 </Project>

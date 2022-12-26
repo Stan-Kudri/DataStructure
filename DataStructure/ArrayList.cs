@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 
-namespace GenericsToList
+namespace DataStructure
 {
-    public class ListClass<T> : IEnumerable<T>
+    public class ArrayList<T> : IEnumerable<T>
     {
         public T[]? ListItem { get; set; } = null;
 
@@ -32,9 +32,9 @@ namespace GenericsToList
 
         public int Count => _capacity;
 
-        public ListClass() { }
+        public ArrayList() { }
 
-        public ListClass(T[]? array)
+        public ArrayList(T[]? array)
         {
             if (array != null)
             {
@@ -47,7 +47,7 @@ namespace GenericsToList
             }
         }
 
-        public ListClass(int capacity)
+        public ArrayList(int capacity)
         {
             if (_capacity <= 0)
                 throw new ArgumentOutOfRangeException(nameof(capacity));

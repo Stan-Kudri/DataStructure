@@ -161,48 +161,48 @@ namespace DataStructure
         public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(ListItem);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
 
-    public class ArrayEnumerator<T> : IEnumerator<T>
-    {
-        private readonly T[] _itemArray;
-
-        private int _index;
-
-        public int Index => _index;
-
-        public ArrayEnumerator(T[]? array)
+        private class ArrayEnumerator<T> : IEnumerator<T>
         {
-            if (array == null)
+            private readonly T[] _itemArray;
+
+            private int _index;
+
+            public int Index => _index;
+
+            public ArrayEnumerator(T[]? array)
             {
-                throw new ArgumentNullException(nameof(array), "Array not null.");
+                if (array == null)
+                {
+                    throw new ArgumentNullException(nameof(array), "Array not null.");
+                }
+                _itemArray = array;
+                _index = -1;
             }
-            _itemArray = array;
-            _index = -1;
-        }
 
-        object IEnumerator.Current => Index;
+            object IEnumerator.Current => Index;
 
-        T IEnumerator<T>.Current => _itemArray[Index];
+            T IEnumerator<T>.Current => _itemArray[Index];
 
 
-        public void Dispose()
-        {
-        }
-
-        public bool MoveNext()
-        {
-            if (_index + 1 >= _itemArray.Length)
+            public void Dispose()
             {
-                return false;
             }
-            _index++;
-            return true;
-        }
 
-        public void Reset()
-        {
-            _index = -1;
+            public bool MoveNext()
+            {
+                if (_index + 1 >= _itemArray.Length)
+                {
+                    return false;
+                }
+                _index++;
+                return true;
+            }
+
+            public void Reset()
+            {
+                _index = -1;
+            }
         }
     }
 }

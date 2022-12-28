@@ -63,7 +63,7 @@ namespace DataStructure
             }
         }
 
-        private void DoubleCapacityFromLenght() => Capacity = GrowFactor * _size;
+        private void DoubleCapacity() => Capacity = GrowFactor * _size;
 
         private void DefaultValue()
         {
@@ -72,7 +72,7 @@ namespace DataStructure
 
         private void ResizeList()
         {
-            DoubleCapacityFromLenght();
+            DoubleCapacity();
         }
 
         public ArrayList()
@@ -92,7 +92,7 @@ namespace DataStructure
 
                 if (_size >= Capacity)
                 {
-                    DoubleCapacityFromLenght();
+                    DoubleCapacity();
                 }
                 array.CopyTo(ListItem, 0);
             }
@@ -110,7 +110,7 @@ namespace DataStructure
             }
             if (capacity == 0)
             {
-                ListItem = new T[capacity];
+                ListItem = Array.Empty<T>();
             }
             if (Capacity != capacity)
             {

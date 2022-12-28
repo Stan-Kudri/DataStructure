@@ -8,5 +8,11 @@ public static class Program
         l.Add("Hello");
         l.Add("World");
         Console.WriteLine(string.Join(" ", l));
+        var rr = new string[10];
+        rr = Array.Empty<string>();
+        foreach (string s in rr)
+        {
+            Console.WriteLine(s);
+        }
     }
 }

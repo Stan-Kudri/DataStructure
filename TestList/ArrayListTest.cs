@@ -128,7 +128,6 @@ namespace TestList
             actualList.Clear();
 
             //Assert
-            Assert.Equal(expectedList, actualList);
 
         }
 

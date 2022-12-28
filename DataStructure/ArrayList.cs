@@ -4,19 +4,17 @@ namespace DataStructure
 {
     public class ArrayList<T> : IEnumerable<T>
     {
-        private const int DoubleMultiply = 2;
+        private const int GrowFactor = 2;
 
-        private T[] ListItem { get; set; } = Array.Empty<T>();
+        private T[] ListItem = Array.Empty<T>();
 
-        private int _capacity = 0;
-
-        private int _lenght = 0;
+        private int _size = 0;
 
         public T this[int index]
         {
             get
             {
-                if (index >= 0 && index < _lenght)
+                if (index >= 0 && index < _size)
                 {
                     return ListItem[index];
                 }
@@ -27,7 +25,7 @@ namespace DataStructure
             }
             set
             {
-                if (index >= 0 && index < _lenght)
+                if (index >= 0 && index < _size)
                 {
                     ListItem[index] = value;
                 }
@@ -38,28 +36,48 @@ namespace DataStructure
             }
         }
 
-        public int Count => _lenght;
+        public int Count => _size;
 
-        public int Capacity => _capacity;
-
-        private void DoubleCapacityFromLenght() => _capacity = DoubleMultiply * _lenght;
-
-        private void DefoultValue()
+        public int Capacity
         {
-            _capacity = 10;
-            ListItem = new T[_capacity];
+            get => ListItem.Length;
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentException("Size more value", nameof(value));
+                }
+                if (value != _size)
+                {
+                    var array = new T[value];
+                    if (_size >= 1)
+                    {
+                        ListItem.CopyTo(array, 0);
+                    }
+                    ListItem = array;
+                }
+                if (value == 0)
+                {
+                    ListItem = Array.Empty<T>();
+                }
+            }
         }
 
-        private void Resiz(T[] array)
+        private void DoubleCapacityFromLenght() => Capacity = GrowFactor * _size;
+
+        private void DefaultValue()
+        {
+            Capacity = 10;
+        }
+
+        private void ResizeList()
         {
             DoubleCapacityFromLenght();
-            ListItem = new T[_capacity];
-            array.CopyTo(ListItem, 0);
         }
 
         public ArrayList()
         {
-            DefoultValue();
+            DefaultValue();
         }
 
         public ArrayList(T[] array)
@@ -70,14 +88,12 @@ namespace DataStructure
             }
             if (array.Length > 0)
             {
-                _lenght = array.Length;
+                _size = array.Length;
 
-                if (_lenght >= _capacity)
+                if (_size >= Capacity)
                 {
                     DoubleCapacityFromLenght();
-                    ListItem = new T[_capacity];
                 }
-
                 array.CopyTo(ListItem, 0);
             }
             else
@@ -94,37 +110,34 @@ namespace DataStructure
             }
             if (capacity == 0)
             {
-                _capacity = 0;
-                ListItem = Array.Empty<T>();
-            }
-            if (_capacity != capacity)
-            {
                 ListItem = new T[capacity];
-                _capacity = capacity;
-                _lenght = 0;
+            }
+            if (Capacity != capacity)
+            {
+                Capacity = capacity;
             }
         }
 
         public void Add(T item)
         {
-            if (_capacity == 0)
+            if (Capacity == 0)
             {
-                DefoultValue();
+                DefaultValue();
             }
 
-            _lenght++;
+            _size++;
 
-            if (_lenght >= _capacity)
+            if (_size >= Capacity)
             {
-                Resiz(ListItem);
+                ResizeList();
             }
 
-            ListItem[_lenght - 1] = item;
+            ListItem[_size - 1] = item;
         }
 
-        public bool Contain(T item) => _lenght != 0 && IndexOf(item) >= 0;
+        public bool Contain(T item) => _size != 0 && IndexOf(item) >= 0;
 
-        public int IndexOf(T item) => Array.IndexOf(ListItem, item, 0, _lenght);
+        public int IndexOf(T item) => Array.IndexOf(ListItem, item, 0, _size);
 
         public bool Remove(T item)
         {
@@ -141,21 +154,27 @@ namespace DataStructure
 
         public void RemoveAt(int index)
         {
-            if (index < _lenght)
+            if (index < _size)
             {
-                _lenght--;
-                Array.Copy(ListItem, index + 1, ListItem, index, _lenght - index);
+                _size--;
+                Array.Copy(ListItem, index + 1, ListItem, index, _size - index);
             }
             else
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
+
         public void Clear()
         {
-            ListItem = new T[0];
-            _capacity = 0;
-            _lenght = 0;
+            if (Capacity > 0)
+            {
+                if (_size > 0)
+                {
+                    Array.Clear(ListItem, 0, _size);
+                    _size = 0;
+                }
+            }
         }
 
         public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(ListItem);

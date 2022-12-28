@@ -121,7 +121,8 @@ namespace TestList
         public void Examination_Clear_Collection(ArrayList<string> actualList)
         {
             //Arrange
-            var expectedList = new List<string>();
+            var expectedList = new List<string>(10);
+            expectedList.Clear();
 
             //Act
             actualList.Clear();
@@ -136,6 +137,14 @@ namespace TestList
             yield return new object[]
             {
                 new ArrayList<string>(){"Keny", "Manta", "Sandy", "Polly", "Dandy"},
+            };
+        }
+
+        public static IEnumerable<object[]> ListWithEmptyItems()
+        {
+            yield return new object[]
+            {
+                new ArrayList<string>(){},
             };
         }
 

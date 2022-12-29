@@ -1,4 +1,5 @@
 using DataStructure;
+using FluentAssertions;
 
 namespace TestList
 {
@@ -120,15 +121,11 @@ namespace TestList
         [MemberData(nameof(ListElement))]
         public void Examination_Clear_Collection(ArrayList<string> actualList)
         {
-            //Arrange
-            var expectedList = new List<string>(10);
-            expectedList.Clear();
-
             //Act
             actualList.Clear();
 
             //Assert
-
+            actualList.Should().Contain(x => x == null);
         }
 
         public static IEnumerable<object[]> ListElement()

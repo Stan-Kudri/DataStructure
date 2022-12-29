@@ -5,8 +5,9 @@ namespace DataStructure
     public class ArrayList<T> : IEnumerable<T>
     {
         private const int GrowFactor = 2;
+        private const int DefoultCapacity = 10;
 
-        private T[] ListItem = Array.Empty<T>();
+        private T[] _item = Array.Empty<T>();
 
         private int _size = 0;
 
@@ -16,7 +17,7 @@ namespace DataStructure
             {
                 if (index >= 0 && index < _size)
                 {
-                    return ListItem[index];
+                    return _item[index];
                 }
                 else
                 {
@@ -27,7 +28,7 @@ namespace DataStructure
             {
                 if (index >= 0 && index < _size)
                 {
-                    ListItem[index] = value;
+                    _item[index] = value;
                 }
                 else
                 {
@@ -40,7 +41,7 @@ namespace DataStructure
 
         public int Capacity
         {
-            get => ListItem.Length;
+            get => _item.Length;
             set
             {
                 if (value < _size)
@@ -50,34 +51,28 @@ namespace DataStructure
                 if (value != _size)
                 {
                     var array = new T[value];
-                    if (_size >= 1)
+                    if (_size > 0)
                     {
-                        ListItem.CopyTo(array, 0);
+                        _item.CopyTo(array, 0);
                     }
-                    ListItem = array;
+                    _item = array;
                 }
                 if (value == 0)
                 {
-                    ListItem = Array.Empty<T>();
+                    _item = Array.Empty<T>();
                 }
             }
         }
 
-        private void DoubleCapacity() => Capacity = GrowFactor * _size;
-
-        private void DefaultValue()
-        {
-            Capacity = 10;
-        }
+        private void Grow() => Capacity = GrowFactor * _size;
 
         private void ResizeList()
         {
-            DoubleCapacity();
+            Grow();
         }
 
-        public ArrayList()
+        public ArrayList() : this(DefoultCapacity)
         {
-            DefaultValue();
         }
 
         public ArrayList(T[] array)
@@ -88,17 +83,12 @@ namespace DataStructure
             }
             if (array.Length > 0)
             {
+                array.CopyTo(_item, 0);
                 _size = array.Length;
-
-                if (_size >= Capacity)
-                {
-                    DoubleCapacity();
-                }
-                array.CopyTo(ListItem, 0);
             }
             else
             {
-                ListItem = Array.Empty<T>();
+                _item = Array.Empty<T>();
             }
         }
 
@@ -110,34 +100,27 @@ namespace DataStructure
             }
             if (capacity == 0)
             {
-                ListItem = Array.Empty<T>();
+                _item = Array.Empty<T>();
+                return;
             }
-            if (Capacity != capacity)
-            {
-                Capacity = capacity;
-            }
+            Capacity = capacity;
         }
 
         public void Add(T item)
         {
-            if (Capacity == 0)
-            {
-                DefaultValue();
-            }
-
             _size++;
 
-            if (_size >= Capacity)
+            if (_size > Capacity)
             {
                 ResizeList();
             }
 
-            ListItem[_size - 1] = item;
+            _item[_size - 1] = item;
         }
 
-        public bool Contain(T item) => _size != 0 && IndexOf(item) >= 0;
+        public bool Contain(T item) => IndexOf(item) >= 0;
 
-        public int IndexOf(T item) => Array.IndexOf(ListItem, item, 0, _size);
+        public int IndexOf(T item) => Array.IndexOf(_item, item, 0, _size);
 
         public bool Remove(T item)
         {
@@ -157,7 +140,7 @@ namespace DataStructure
             if (index < _size)
             {
                 _size--;
-                Array.Copy(ListItem, index + 1, ListItem, index, _size - index);
+                Array.Copy(_item, index + 1, _item, index, _size - index);
             }
             else
             {
@@ -171,13 +154,13 @@ namespace DataStructure
             {
                 if (_size > 0)
                 {
-                    Array.Clear(ListItem, 0, _size);
+                    Array.Clear(_item);
                     _size = 0;
                 }
             }
         }
 
-        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(ListItem);
+        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_item);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

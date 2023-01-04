@@ -64,18 +64,9 @@ namespace TestList
             //Act
             actualList.RemoveAt(index);
             expectedList.RemoveAt(index);
-            var equls = true;
-
-            for (var i = 0; i < actualList.Count; i++)
-            {
-                if (actualList[i] != expectedList[i])
-                {
-                    equls = false;
-                }
-            }
 
             //Assert
-            Assert.True(equls);
+            actualList.Should().Equal(expectedList);
         }
 
         [Theory]
@@ -118,14 +109,15 @@ namespace TestList
         }
 
         [Theory]
-        [MemberData(nameof(ListElement))]
-        public void Examination_Clear_Collection(ArrayList<string> actualList)
+        [MemberData(nameof(ItemElement))]
+        public void Examination_Clear_Collection(ArrayList<string> actualList, List<string> expectedList)
         {
             //Act
             actualList.Clear();
+            expectedList.Clear();
 
             //Assert
-            actualList.Should().Contain(x => x == null);
+            actualList.Should().Equal(expectedList);
         }
 
         public static IEnumerable<object[]> ListElement()

@@ -160,25 +160,27 @@ namespace DataStructure
             }
         }
 
-        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_item);
+        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_item, _size);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private class ArrayEnumerator<T> : IEnumerator<T>
         {
             private readonly T[] _itemArray;
+            private readonly int _size;
 
             private int _index;
 
             public int Index => _index;
 
-            public ArrayEnumerator(T[]? array)
+            public ArrayEnumerator(T[]? array, int size)
             {
                 if (array == null)
                 {
                     throw new ArgumentNullException(nameof(array), "Array not null.");
                 }
                 _itemArray = array;
+                _size = size;
                 _index = -1;
             }
 
@@ -193,7 +195,7 @@ namespace DataStructure
 
             public bool MoveNext()
             {
-                if (_index + 1 >= _itemArray.Length)
+                if (_index + 1 >= _size)
                 {
                     return false;
                 }

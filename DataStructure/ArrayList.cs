@@ -168,7 +168,6 @@ namespace DataStructure
         {
             private readonly T[] _itemArray;
             private readonly int _size;
-
             private int _index;
 
             public int Index => _index;
@@ -187,7 +186,6 @@ namespace DataStructure
             object IEnumerator.Current => Index;
 
             T IEnumerator<T>.Current => _itemArray[Index];
-
 
             public void Dispose()
             {

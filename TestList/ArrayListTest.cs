@@ -10,19 +10,18 @@ namespace TestList
         public void Compare_Add_Item_Method_New_Collection_With_Collection_List(string firstItem, string secondItem)
         {
             //Arrange
-            var listClass = new ArrayList<string>();
-            var list = new List<string>();
+            var actualList = new ArrayList<string>();
+            var expectList = new List<string>();
 
             //Act
-            listClass.Add(firstItem);
-            listClass.Add(secondItem);
+            actualList.Add(firstItem);
+            actualList.Add(secondItem);
 
-            list.Add(firstItem);
-            list.Add(secondItem);
+            expectList.Add(firstItem);
+            expectList.Add(secondItem);
 
             //Assert
-            Assert.Equal(list[0], listClass[0]);
-            Assert.Equal(list[1], listClass[1]);
+            actualList.Should().Equal(expectList);
         }
 
 
